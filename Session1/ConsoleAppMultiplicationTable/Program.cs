@@ -64,7 +64,6 @@ while ((start == 0 && end == 0) || start > end)
 Console.ForegroundColor = ConsoleColor.Green;
 for (var i = start; i <= end; i++)
 {
-    Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine($"{number} x {i} = {Convert.ToInt16(number) * i}");
 }
 Console.ResetColor();
