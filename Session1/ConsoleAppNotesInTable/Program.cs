@@ -100,14 +100,17 @@ Console.WriteLine("Moyenne du tableau: " + average);
 
 // Affichage des notes supérieures à la moyenne
 var tableNotesHigherThanAverage = string.Empty;
+var count = 0;
 for (var i = 0; i < size; i++)
 {
-    tableNotesHigherThanAverage += table[i] > average 
-        ? table[i] + (i == size - 1 ? "" : ", ") 
-        : "";
+    if (table[i] > average)
+    {
+        tableNotesHigherThanAverage += table[i] + ", ";
+        count++;
+    }
 }
 // Suppression de la virgule et de l'espace à la fin de la chaîne si elle n'est pas vide
 tableNotesHigherThanAverage = tableNotesHigherThanAverage.TrimEnd(',', ' ');
 
-Console.WriteLine("Notes supérieures à la moyenne: " + tableNotesHigherThanAverage);
+Console.WriteLine($"Notes supérieures à la moyenne ({count}): {tableNotesHigherThanAverage}");
 Console.ResetColor();

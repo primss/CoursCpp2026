@@ -30,23 +30,15 @@ switch (choice)
 // Affichage du tableau final
 DisplayTable(table, out var tableTotal);
 
-// Calcul et affichage de la moyenne du tableau
 Console.ForegroundColor = ConsoleColor.Green;
+
+// Calcul et affichage de la moyenne du tableau
 var average = tableTotal / size;
 Console.WriteLine("Moyenne du tableau: " + average);
 
 // Affichage des notes supérieures à la moyenne
-var tableNotesHigherThanAverage = string.Empty;
-for (var i = 0; i < size; i++)
-{
-    tableNotesHigherThanAverage += table[i] > average
-        ? table[i] + (i == size - 1 ? "" : ", ")
-        : "";
-}
-// Suppression de la virgule et de l'espace à la fin de la chaîne si elle n'est pas vide
-tableNotesHigherThanAverage = tableNotesHigherThanAverage.TrimEnd(',', ' ');
+DisplayAboveAverageNotes(table, average);
 
-Console.WriteLine("Notes supérieures à la moyenne: " + tableNotesHigherThanAverage);
 Console.ResetColor();
 
 // Fonctions utilisées dans le programme
@@ -131,10 +123,30 @@ static void FillTableAutomatically(int[] table)
 static void DisplayTable(int[] table, out int tableTotal)
 {
     tableTotal = 0;
-    Console.WriteLine("Contenu du tableau:");
+    var size = table.Length;
+    var tableValue = string.Empty;
     for (var i = 0; i < table.Length; i++)
     {
-        Console.WriteLine($"Position [{i}]: {table[i]}"); 
+        tableValue += table[i] + (i == size - 1 ? "" : ", ");
         tableTotal += table[i];
     }
+    Console.WriteLine($"Contenu du tableau: {tableValue}");
+}
+
+static void DisplayAboveAverageNotes(int[] table, double average)
+{
+    var tableNotesHigherThanAverage = string.Empty;
+    var count = 0;
+    for (var i = 0; i < table.Length; i++)
+    {
+        if (table[i] > average)
+        {
+            tableNotesHigherThanAverage += table[i] + ", ";
+            count++;
+        }
+    }
+    // Suppression de la virgule et de l'espace à la fin de la chaîne si elle n'est pas vide
+    tableNotesHigherThanAverage = tableNotesHigherThanAverage.TrimEnd(',', ' ');
+
+    Console.WriteLine($"Notes supérieures à la moyenne ({count}): {tableNotesHigherThanAverage}");
 }
