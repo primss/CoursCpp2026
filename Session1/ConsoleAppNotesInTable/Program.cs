@@ -11,7 +11,7 @@ if (string.IsNullOrEmpty(sizeStr))
     Environment.Exit(0);
 }
 var size = 0;
-while (size == 0)
+while (size <= 0)
 {
     try
     {
@@ -27,7 +27,7 @@ while (size == 0)
 }
 
 // Initialisation du tableau
-Console.WriteLine("Saisie des valeur du tableau.");
+Console.WriteLine("Remplissage des valeurs du tableau.");
 var choice = "-1";
 while (choice == "-1")
 {

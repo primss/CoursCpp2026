@@ -2,5 +2,6 @@
   <Folder Name="/Session1/">
     <Project Path="Session1/ConsoleAppMultiplicationTable/ConsoleAppMultiplicationTable.csproj" />
     <Project Path="Session1/ConsoleAppNotesInTable/ConsoleAppNotesInTable.csproj" />
+    <Project Path="Session1/ConsoleAppNotesInTablesUsingFunctions/ConsoleAppNotesInTablesUsingFunctions.csproj" />
   </Folder>
 </Solution>
