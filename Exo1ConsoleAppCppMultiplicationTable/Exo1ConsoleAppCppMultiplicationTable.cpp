@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 
+// Déterminer si l'input est un nombre
 bool isNumber(const std::string& str) {
 	for (char const& c : str) {
 		if (std::isdigit(c) == 0) return false;
@@ -9,6 +10,7 @@ bool isNumber(const std::string& str) {
 	return true;
 }
 
+// Valider et récupérer l'input
 int getInput() {
 	std::string input;
 	std::getline(std::cin, input);
@@ -24,11 +26,13 @@ int getInput() {
 
 int main()
 {
+	// Configurer la locale pour permettre l'affichage de caractères spéciaux
 	std::setlocale(LC_ALL, "");
-    std::cout << "Simulation de tables de multiplication!\n";
+    std::cout << "Exercice 1 : Simulation de tables de multiplication!\n";
 	std::cout << "Appuyez sur Entrée pour quitter sans saisir de valeur.\n";
 	std::cout << "Entrez un nombre pour afficher sa table de multiplication: ";
 	
+	// Récupérer le nombre pour lequel afficher la table de multiplication
 	int number = getInput();
 	if (number < 0) {
 		std::cout << "Veuillez entrer un nombre positif: ";
@@ -39,6 +43,7 @@ int main()
 		return 0;
 	}
 
+	// Récupérer la plage de multiplication
 	std::cout << "Veuillez entrer le nombre de début de la plage: ";
 	int start = getInput();
 
@@ -49,6 +54,7 @@ int main()
 		end = getInput();
 	}
 
+	// Afficher la table de multiplication
 	std::cout << "Table de multiplication de " << number << " de " << start << " à " << end << ":\n";
 	for (int i = start; i <= end; ++i) {
 		std::cout << number << " x " << i << " = " << number * i << "\n";
