@@ -1,7 +1,13 @@
 <Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
   <Folder Name="/Session1/">
-    <Project Path="Session1/ConsoleAppMultiplicationTable/ConsoleAppMultiplicationTable.csproj" />
     <Project Path="Session1/ConsoleAppNotesInTable/ConsoleAppNotesInTable.csproj" />
     <Project Path="Session1/ConsoleAppNotesInTablesUsingFunctions/ConsoleAppNotesInTablesUsingFunctions.csproj" />
   </Folder>
+  <Project Path="Cpp/Exo1ConsoleAppCppMultiplicationTable/Exo1ConsoleAppCppMultiplicationTable.vcxproj" Id="50877bc3-d063-4657-9d74-b9be5a0d8ec0" />
+  <Project Path="Cpp/Exo2ConsoleAppCppNotesInTable/Exo2ConsoleAppCppNotesInTable.vcxproj" Id="641de681-f6e2-4f2c-84cc-111c17f9b20a" />
 </Solution>

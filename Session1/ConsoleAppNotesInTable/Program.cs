@@ -1,4 +1,4 @@
-﻿Console.WriteLine("Exercice 2");
+﻿Console.WriteLine("Saisie de note dans un tableau avec calcul de la moyenne et détermination de notes supérieures à la moyenne calculée");
 Console.ForegroundColor = ConsoleColor.Blue;
 Console.WriteLine("Appuyez sur Entrée pour quitter sans saisir de valeur.");
 Console.ResetColor();
