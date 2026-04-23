@@ -3,19 +3,30 @@
 #include <string>
 #include <ctime>
 
-// Déterminer si l'input est un nombre
-bool isNumber(const std::string& str) {
+/// <summary>
+/// Fonction pour déterminer si une chaîne de caractères représente un nombre.
+/// </summary>
+/// <param name="str">Chaîne de caractères à vérifier</param>
+/// <returns>True si la chaîne représente un nombre, false sinon</returns>
+bool IsNumber(const std::string& str) {
+	bool isNumber = true;
 	for (char const& c : str) {
-		if (std::isdigit(c) == 0) return false;
+		if (std::isdigit(c) == 0) {
+			isNumber = false;
+			break;
+		}
 	}
-	return true;
+	return isNumber;
 }
 
-// Valider et récupérer l'input
-int getInput() {
+/// <summary>
+/// Lit un entier depuis l'entrée standard en répétant la demande tant que la chaîne n'est pas un nombre valide.
+/// </summary>
+/// <returns>L'entier converti depuis la chaîne saisie (std::stoi). Retourne -1 si l'utilisateur saisit une ligne vide pour indiquer qu'il souhaite quitter.</returns>
+int GetInput() {
 	std::string input;
 	std::getline(std::cin, input);
-	while (!isNumber(input)) {
+	while (!IsNumber(input)) {
 		std::cout << "Veuillez entrer un nombre valide: ";
 		std::getline(std::cin, input);
 		if (input.empty()) {
@@ -25,18 +36,26 @@ int getInput() {
 	return std::stoi(input);
 }
 
+/// <summary>
+/// Fonction pour demander à l'utilisateur la taille du tableau de notes à saisir, avec validation pour s'assurer que la taille est un nombre positif. Si l'utilisateur entre une valeur non valide ou souhaite quitter, la fonction gère ces cas de manière appropriée.
+/// </summary>
+/// <returns>Entier représentant la taille du tableau</returns>
 int GetTableSizeFromUser() {
 	std::cout << "Veuillez entrer le nombre de notes à saisir: ";
-	int size = getInput();
+	int size = GetInput();
 	while (size <= 0) {
 		std::cout << "Le nombre doit être positif.\n";
 		std::cout << "Veuillez entrer le nombre de notes à saisir: ";
-		size = getInput();
+		size = GetInput();
 	}
 
 	return size;
 }
 
+/// <summary>
+/// Invite l'utilisateur à choisir comment remplir le tableau (manuel ou automatique) et répète la demande jusqu'à obtenir un choix valide (1 ou 2).
+/// </summary>
+/// <returns>Le choix de l'utilisateur : 1 pour remplissage manuel, 2 pour remplissage automatique (valeurs aléatoires entre 0 et 20).</returns>
 int GetTableFillChoiceFromUser() {
 	int choice = -1;
 	while (choice == -1) {
@@ -44,7 +63,7 @@ int GetTableFillChoiceFromUser() {
 		std::cout << "1. Manuellement\n";
 		std::cout << "2. Automatiquement avec des valeurs aléatoires entre 0 et 20\n";
 		std::cout << "Veuillez entrer votre choix (1 ou 2): ";
-		choice = getInput();
+		choice = GetInput();
 		if (choice != 1 && choice != 2) {
 			std::cout << "Choix invalide.\n";
 			GetTableFillChoiceFromUser();
@@ -54,6 +73,10 @@ int GetTableFillChoiceFromUser() {
 	return choice;
 }
 
+/// <summary>
+/// Point d'entrée du programme : saisit ou génère un tableau de notes, calcule la moyenne et affiche les notes supérieures à la moyenne.
+/// </summary>
+/// <returns>Code de sortie du programme. Renvoie 0 à la fin (y compris lors des sorties anticipées en cas d'erreur de saisie).</returns>
 int main()
 {
 	std::setlocale(LC_ALL, "");
@@ -109,7 +132,7 @@ int main()
 			break;
 	}
 
-	std::string tableValue = "";
+	std::string tableValue;
 	int tableTotal = 0;
 	for (int i = 0; i < size; ++i) {
 		// Convertit l'entier en string et l'ajoute
