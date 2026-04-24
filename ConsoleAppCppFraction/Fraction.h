@@ -15,6 +15,7 @@ class Fraction
 
 		void creer(int position);
 		void afficher(int position);
+		void simplifier();
 		std::string const toString();
 
 		// Surcharge de l'operateur '=='
@@ -23,6 +24,21 @@ class Fraction
 		bool operator<(const Fraction& autre) const;
 		// Surcharge de l'operateur '<='
 		bool operator<=(const Fraction& autre) const;
+		// Surcharge de l'operateur '>='
+		bool operator>=(const Fraction& autre) const;
+		// Surcharge de l'operateur '>'
+		bool operator>(const Fraction& autre) const;
+		// Surcharge de l'operateur '!='
+		bool operator!=(const Fraction& autre) const;
+
+		// Surcharge de l'operateur '+'
+		Fraction operator+(const Fraction& autre) const;
+		// Surcharge de l'operateur '-'
+		Fraction operator-(const Fraction& autre) const;
+		// Surcharge de l'operateur '*'
+		Fraction operator*(const Fraction& autre) const;
+		// Surcharge de l'operateur '/'
+		Fraction operator/(const Fraction& autre) const;
 
 	private:
 		long Num;

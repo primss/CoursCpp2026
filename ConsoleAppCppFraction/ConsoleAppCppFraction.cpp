@@ -20,10 +20,12 @@ UInt choixUtilisateur()
     cout << "1. Saisie des fractions" << endl;
     cout << "2. Génération automatique de 10 fractions" << endl;
     cout << "3. Affichage des fractions" << endl;
-    cout << "4. Comparer deux fractions" << endl;
+    cout << "4. Comparer par égalité deux fractions" << endl;
     cout << "5. Additionner deux fractions" << endl;
     cout << "6. Soustraire deux fractions" << endl;
     cout << "7. Multiplier deux fractions" << endl;
+    cout << "8. Diviser deux fractions" << endl;
+    cout << "9. Simplifier les fractions" << endl;
     cout << "0. Quitter" << endl;
     cout << "Entrez votre choix : ";
     cin >> choix;
@@ -59,6 +61,74 @@ void genererFractionsAleatoire(vector<Fraction>& listFractions)
     }
 }
 
+void comparerDeuxFractions(vector<Fraction>& listFractions) {
+    if (listFractions.size() < 2) {
+        cout << "Info : Il faut au moins deux fractions dans la liste pour comparer." << endl;
+    } 
+    else if (listFractions.size() == 2) { // Comparaison directe
+        comparerFractions(listFractions[0], listFractions[1]);
+    }
+    else {
+        int f1, f2;
+        afficherListeFractions(listFractions);
+        cout << "Choisir les fractions à comparer par leur n° d'ordre séparé par espace : ";
+        if (!(cin >> f1 >> f2)) {
+            cout << "Erreur : les numéros d'ordre doivent des nombres";                    
+        }
+        if (f1 <= 0 || f1 > listFractions.size() || f2 <= 0 || f2 > listFractions.size()) {
+            cout << "Erreur : les numéros d'ordre doivent être dans l'intervalle 1 à " << listFractions.size() << endl;
+        }
+        f1--;
+        f2--;
+        comparerFractions(listFractions[f1], listFractions[f2]);
+    }
+}
+
+void faireUneOperation(vector<Fraction>& listFractions, UInt choix) {
+    if (listFractions.size() < 2) {
+        cout << "Info : Il faut au moins deux fractions dans la liste pour effectuer cette opération." << endl;
+        return;
+    }
+    afficherListeFractions(listFractions);
+    int f1, f2;
+    cout << "Choisir les fractions à utiliser par leur n° d'ordre séparé par espace : ";
+    if (!(cin >> f1 >> f2)) {
+        cout << "Erreur : les numéros d'ordre doivent des nombres";
+        return;
+    }
+    if (f1 <= 0 || f1 > listFractions.size() || f2 <= 0 || f2 > listFractions.size()) {
+        cout << "Erreur : les numéros d'ordre doivent être dans l'intervalle 1 à " << listFractions.size() << endl;
+        return;
+    }
+	f1--; // Convertir en index de tableau
+	f2--; // Convertir en index de tableau
+    Fraction result;
+    switch (choix) {
+	case 5: // addition
+        result = listFractions[f1] + listFractions[f2];
+        cout << listFractions[f1].toString() << " + " << listFractions[f2].toString() << " = " << result.toString() << endl;
+        break;
+	case 6: // soustraction
+        result = listFractions[f1] - listFractions[f2];
+        cout << listFractions[f1].toString() << " - " << listFractions[f2].toString() << " = " << result.toString() << endl;
+        break;
+	case 7: // multiplication
+        result = listFractions[f1] * listFractions[f2];
+        cout << listFractions[f1].toString() << " * " << listFractions[f2].toString() << " = " << result.toString() << endl;
+        break;
+	case 8: // division
+        if (listFractions[f2].getNum() == 0) {
+            cout << "Erreur : division par zéro !" << endl;
+            return;
+        }
+        result = listFractions[f1] / listFractions[f2];
+        cout << listFractions[f1].toString() << " / " << listFractions[f2].toString() << " = " << result.toString() << endl;
+        break;
+    default:
+        cout << "Op ération non reconnue." << endl;
+    }
+}
+
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
@@ -88,28 +158,24 @@ int main()
                 afficherListeFractions(listFractions);
                 break;
             case 4: // comparaison par égalité de fraction
-                if (listFractions.size() < 2) {
-                    cout << "Info : Il faut au moins deux fractions dans la liste pour comparer." << endl;
-                } 
-                else if (listFractions.size() == 2) { // Comparaison directe
-                    comparerFractions(listFractions[0], listFractions[1]);
-                }
-                else {
-                    afficherListeFractions(listFractions);
-                    cout << "Choisir les fractions à comparer par leur n° d'ordre séparé par espace : ";
-                    if (!(cin >> f1 >> f2)) {
-                        cout << "Erreur : les numéros d'ordre doivent des nombres";
-                        break;
-                    }
-                    if (f1 <= 0 || f1 > listFractions.size() || f2 <= 0 || f2 > listFractions.size()) {
-                        cout << "Erreur : les numéros d'ordre doivent être dans l'intervalle 1 à " << listFractions.size() << endl;
-                        break;
-                    }
-                    f1--;
-                    f2--;
-                    comparerFractions(listFractions[f1], listFractions[f2]);
-                }
+				comparerDeuxFractions(listFractions);
                 break;
+			case 5: // addition de deux fractions
+            case 6: // soustraction de deux fractions
+            case 7: // multiplication de deux fractions
+            case 8: // division de deux fractions
+                faireUneOperation(listFractions, choix);
+                break;
+            case 9: // simplification de toutes les fractions
+                if (listFractions.size() == 0) {
+                    cout << "Info : La liste est vide, il n'y a aucune fraction à simplifier." << endl;
+                    break;
+				}
+                for (int i = 0; i < listFractions.size(); i++) {
+                    listFractions[i].simplifier();
+                }
+                cout << "Opération de simplification terminée." << endl;
+				break;
             default:
                 break;
         }

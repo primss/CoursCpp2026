@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <numeric>
+#include <cmath>
 
 Fraction::Fraction() : Num(0), Den(1)
 {
@@ -84,6 +86,23 @@ void Fraction::afficher(int position)
 	}
 }
 
+void Fraction::simplifier()
+{
+	if (Den == 0) return; // Gestion d'erreur basique
+
+	// On calcule le PGCD des valeurs absolues pour gérer les signes
+	int diviseurCommun = std::gcd(std::abs(Num), std::abs(Den));
+
+	Num /= diviseurCommun;
+	Den /= diviseurCommun;
+
+	// Convention : on garde le signe moins au numérateur si la fraction est négative
+	if (Den < 0) {
+		Num = -Num;
+		Den = -Den;
+	}
+}
+
 std::string const Fraction::toString()
 {
 	std::stringstream ss;
@@ -106,7 +125,47 @@ bool Fraction::operator<=(const Fraction& autre) const
 	return (*this < autre) || (*this == autre);
 }
 
-/*a <= b : (a < b) || (a == b)
-a > b : !(a <= b)
-a >= b : !(a < b)
-a != b : !(a == b)*/
+bool Fraction::operator>=(const Fraction& autre) const
+{
+	return !(*this <= autre);
+}
+
+bool Fraction::operator>(const Fraction& autre) const
+{
+	return !(*this < autre);
+}
+
+bool Fraction::operator!=(const Fraction& autre) const
+{
+	return !(*this == autre);
+}
+
+Fraction Fraction::operator+(const Fraction& autre) const
+{
+	if (this->Den == autre.Den) {
+		return Fraction(this->Num + autre.Num, this->Den);
+	}
+	Fraction f(this->Num * autre.Den + this->Den * autre.Num, this->Den * autre.Den);
+	f.simplifier();
+	return f;
+}
+
+Fraction Fraction::operator-(const Fraction& autre) const
+{
+	Fraction f(this->Num * autre.Den - this->Den * autre.Num, this->Den * autre.Den);
+	f.simplifier();
+	return f;
+}
+
+Fraction Fraction::operator*(const Fraction& autre) const
+{
+	Fraction f(this->Num * autre.Num, this->Den * autre.Den);
+	f.simplifier();
+	return f;
+}
+
+Fraction Fraction::operator/(const Fraction& autre) const
+{
+	Fraction fractionInverse(autre.Den, autre.Num); // Inversion de la fraction à diviser
+	return *this * fractionInverse;
+}
