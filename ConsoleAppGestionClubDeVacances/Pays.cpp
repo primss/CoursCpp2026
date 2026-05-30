@@ -136,7 +136,6 @@ void listSavedPays(Database& db)
     std::cout << " CODE | PAYS                           | CONTINENT       " << std::endl;
     std::cout << "------+--------------------------------+-----------------" << std::endl;
 
-    // Utilisation d'une boucle foreach moderne et propre
     for (const auto& pays : payss) {
         std::cout << " " << pays.code << "  |";
         std::cout << pays.libelle;
@@ -144,7 +143,7 @@ void listSavedPays(Database& db)
         for (size_t i = pays.libelle.length(); i < 32; ++i) {
             std::cout << " ";
         }
-        // Note : ici pays.codePays contiendra le libellé du pays grâce au INNER JOIN
+
         std::cout << " |" << pays.libelleContinent << std::endl;
     }
 
