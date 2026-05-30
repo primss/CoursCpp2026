@@ -131,6 +131,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleAppGestionClubDeVacances.cpp" />
+    <ClCompile Include="Continent.cpp" />
+    <ClCompile Include="Database.cpp" />
+    <ClCompile Include="Pays.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Village.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Continent.h" />
+    <ClInclude Include="Database.h" />
+    <ClInclude Include="Pays.h" />
+    <ClInclude Include="Utilities.h" />
+    <ClInclude Include="Village.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
