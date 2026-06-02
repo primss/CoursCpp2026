@@ -13,42 +13,87 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Entities">
+      <UniqueIdentifier>{e0c5fecd-5140-45e1-ab6d-d42ef9348b88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Entities">
+      <UniqueIdentifier>{721abd47-d5e2-419c-896f-a6f4e6255fff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Repositories">
+      <UniqueIdentifier>{6b810781-3a6a-437d-b2b8-8cee33ec3d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Repositories">
+      <UniqueIdentifier>{4cde9206-9f17-48d8-8583-9b1886d32956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Utils">
+      <UniqueIdentifier>{3c9df435-0af3-4753-a610-0eb051c85dd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Views">
+      <UniqueIdentifier>{93008a0c-91cc-41a9-aaa7-fe2d58ca7975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Utils">
+      <UniqueIdentifier>{e5c991a6-9fc1-4faf-9018-220d1a465d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Views">
+      <UniqueIdentifier>{3c1a4291-4f7a-4e11-8417-8650b97404cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleAppGestionClubDeVacances.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Utilities.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="VillageData.cpp">
+      <Filter>Fichiers sources\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Village.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="PaysData.cpp">
+      <Filter>Fichiers sources\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ContinentData.cpp">
+      <Filter>Fichiers sources\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="PaysRepository.cpp">
+      <Filter>Fichiers sources\Repositories</Filter>
+    </ClCompile>
+    <ClCompile Include="VillageRepository.cpp">
+      <Filter>Fichiers sources\Repositories</Filter>
     </ClCompile>
     <ClCompile Include="Database.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Continent.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>Fichiers sources\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Pays.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="Village.cpp">
+      <Filter>Fichiers sources\Views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utilities.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="VillageData.h">
+      <Filter>Fichiers d%27en-tête\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="Village.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="PaysData.h">
+      <Filter>Fichiers d%27en-tête\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ContinentData.h">
+      <Filter>Fichiers d%27en-tête\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Repository.h">
+      <Filter>Fichiers d%27en-tête\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="PaysRepository.h">
+      <Filter>Fichiers d%27en-tête\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="VillageRepository.h">
+      <Filter>Fichiers d%27en-tête\Repositories</Filter>
     </ClInclude>
     <ClInclude Include="Database.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Continent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="Utilities.h">
+      <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Pays.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="Village.h">
+      <Filter>Fichiers d%27en-tête\Views</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

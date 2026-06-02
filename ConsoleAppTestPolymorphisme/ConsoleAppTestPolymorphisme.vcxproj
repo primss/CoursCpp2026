@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c5d92764-5667-4bf8-a20f-e4763ec128e3}</ProjectGuid>
-    <RootNamespace>ConsoleAppGestionClubDeVacances</RootNamespace>
+    <ProjectGuid>{78b73450-e266-4592-bebf-1e4a64cc21e5}</ProjectGuid>
+    <RootNamespace>ConsoleAppTestPolymorphisme</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,9 +70,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -130,26 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConsoleAppGestionClubDeVacances.cpp" />
-    <ClCompile Include="ContinentData.cpp" />
-    <ClCompile Include="Database.cpp" />
-    <ClCompile Include="PaysData.cpp" />
-    <ClCompile Include="PaysRepository.cpp" />
-    <ClCompile Include="Utilities.cpp" />
-    <ClCompile Include="Village.cpp" />
-    <ClCompile Include="VillageData.cpp" />
-    <ClCompile Include="VillageRepository.cpp" />
+    <ClCompile Include="Animal.cpp" />
+    <ClCompile Include="Chat.cpp" />
+    <ClCompile Include="Chien.cpp" />
+    <ClCompile Include="ConsoleAppTestPolymorphisme.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ContinentData.h" />
-    <ClInclude Include="Database.h" />
-    <ClInclude Include="PaysData.h" />
-    <ClInclude Include="PaysRepository.h" />
-    <ClInclude Include="Repository.h" />
-    <ClInclude Include="Utilities.h" />
-    <ClInclude Include="Village.h" />
-    <ClInclude Include="VillageData.h" />
-    <ClInclude Include="VillageRepository.h" />
+    <ClInclude Include="Animal.h" />
+    <ClInclude Include="Chat.h" />
+    <ClInclude Include="Chien.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

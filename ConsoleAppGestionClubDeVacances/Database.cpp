@@ -9,6 +9,18 @@ Database::~Database() = default;
 Database::Database(Database&&) noexcept = default;
 Database& Database::operator=(Database&&) noexcept = default;
 
+sqlite3* Database::getRawDb() const {
+	return m_db.get(); // .get() extrait le pointeur brut du unique_ptr
+}
+
+std::string Database::getLastError() const {
+	if (m_db) {
+		// sqlite3_errmsg renvoie le dernier message d'erreur au format const char*
+		return sqlite3_errmsg(m_db.get());
+	}
+	return "Aucune base de donnees ouverte.";
+}
+
 // Implementation du foncteur de destruction personnalisé pour fermer proprement la BDD
 void Database::sqlite3Deleter::operator()(sqlite3* db) const
 {
@@ -142,16 +154,18 @@ bool Database::createTablesOnStart()
 		// Pays
 		"CREATE TABLE IF NOT EXISTS Pays ( "
 		"code_p TEXT, libelle_p TEXT NOT NULL, code_c TEXT NOT NULL, "
-		"PRIMARY KEY(code_p), UNIQUE(libelle_p), FOREIGN KEY(code_c) REFERENCES Continent(code_c) );",
+		"PRIMARY KEY(code_p), UNIQUE(libelle_p), FOREIGN KEY(code_c) "
+		"REFERENCES Continent(code_c) ON UPDATE CASCADE ON DELETE CASCADE);",
 
 		// Village
 		"CREATE TABLE IF NOT EXISTS Village ( "
 		"code_v TEXT, libelle_v TEXT NOT NULL, code_p TEXT NOT NULL, "
-		"PRIMARY KEY(code_v), UNIQUE(libelle_v), FOREIGN KEY(code_p) REFERENCES Pays(code_p) );",
+		"PRIMARY KEY(code_v), UNIQUE(libelle_v), FOREIGN KEY(code_p) "
+		"REFERENCES Pays(code_p) ON UPDATE CASCADE ON DELETE CASCADE);",
 
 		// Activité
 		"CREATE TABLE IF NOT EXISTS Activite ( "
-		"id_a INTEGER, libelle_a TEXT NOT NULL, PRIMARY KEY(id_a) );",
+		"id_a INTEGER PRIMARY KEY AUTOINCREMENT, libelle_a TEXT NOT NULL );",
 
 		// Langue
 		"CREATE TABLE IF NOT EXISTS Langue ( "
@@ -159,18 +173,22 @@ bool Database::createTablesOnStart()
 
 		// Organisation
 		"CREATE TABLE IF NOT EXISTS Organisation ( "
-		"id_o TEXT, date_o TEXT NOT NULL, cout_o REAL NOT NULL, code_v TEXT NOT NULL, id_a INTEGER NOT NULL, "
-		"PRIMARY KEY(id_o), FOREIGN KEY(code_v) REFERENCES Village(code_v), FOREIGN KEY(id_a) REFERENCES Activite(id_a) );",
+		"id_o INTEGER PRIMARY KEY AUTOINCREMENT, date_o TEXT NOT NULL, cout_o REAL NOT NULL, "
+		"code_v TEXT NOT NULL, id_a INTEGER NOT NULL, "
+		"FOREIGN KEY(code_v) REFERENCES Village(code_v) ON UPDATE CASCADE ON DELETE CASCADE, "
+		"FOREIGN KEY(id_a) REFERENCES Activite(id_a) ON UPDATE CASCADE ON DELETE CASCADE);",
 
 		// Avoir
 		"CREATE TABLE IF NOT EXISTS Avoir ( "
 		"code_p TEXT, code_v TEXT, PRIMARY KEY(code_p, code_v), "
-		"FOREIGN KEY(code_p) REFERENCES Pays(code_p), FOREIGN KEY(code_v) REFERENCES Village(code_v) );",
+		"FOREIGN KEY(code_p) REFERENCES Pays(code_p) ON UPDATE CASCADE ON DELETE CASCADE, "
+		"FOREIGN KEY(code_v) REFERENCES Village(code_v) ON UPDATE CASCADE ON DELETE CASCADE);",
 
 		// Parler
 		"CREATE TABLE IF NOT EXISTS Parler ( "
 		"code_v TEXT, code_l TEXT, PRIMARY KEY(code_v, code_l), "
-		"FOREIGN KEY(code_v) REFERENCES Village(code_v), FOREIGN KEY(code_l) REFERENCES Langue(code_l) );",
+		"FOREIGN KEY(code_v) REFERENCES Village(code_v) ON UPDATE CASCADE ON DELETE CASCADE, "
+		"FOREIGN KEY(code_l) REFERENCES Langue(code_l) ON UPDATE CASCADE ON DELETE CASCADE);",
 
 		// Index
 		"CREATE INDEX IF NOT EXISTS idx_o_v_a ON Organisation (code_v, id_a);",
@@ -193,7 +211,15 @@ bool Database::createTablesOnStart()
 		}
 	}
 
-	// Validation de la transaction
+	// On injecte les données avant de valider (COMMIT) la transaction
+	if (!seedInitialData()) {
+		std::cout << "Annulation globale suite a l'echec du Seeding (Rollback)..." << std::endl;
+		sqlite3_exec(m_db.get(), "ROLLBACK;", nullptr, nullptr, nullptr);
+		system("pause");
+		return false;
+	}
+
+	// Validation de la transaction globale (Tables + Données)
 	if (sqlite3_exec(m_db.get(), "COMMIT;", nullptr, nullptr, &errMsg) != SQLITE_OK) {
 		std::cerr << "Erreur lors du Commit : " << errMsg << std::endl;
 		sqlite3_free(errMsg);
@@ -204,135 +230,46 @@ bool Database::createTablesOnStart()
 	return true;
 }
 
-std::vector<ContinentData> Database::getAllContinents() {
-	std::vector<ContinentData> list;
+bool Database::seedInitialData() {
+	char* errMsg = nullptr;
 
-	// On vérifie que la BDD est bien ouverte
-	if (m_db == nullptr) {
-		std::cerr << "Erreur : La connexion à la base de données n'est pas ouverte !" << std::endl;
-		return list;
+	// Liste des données de test (Respectez bien l'ordre des contraintes de clés étrangères !)
+	std::vector<std::string> seedQueries = {
+		// Continents
+		"INSERT OR IGNORE INTO Continent (code_c, libelle_c) VALUES ('EUR', 'Europe');",
+		"INSERT OR IGNORE INTO Continent (code_c, libelle_c) VALUES ('AFR', 'Afrique');",
+		"INSERT OR IGNORE INTO Continent (code_c, libelle_c) VALUES ('ASI', 'Asie');",
+
+		// Pays
+		"INSERT OR IGNORE INTO Pays (code_p, libelle_p, code_c) VALUES ('FRA', 'France', 'EUR');",
+		"INSERT OR IGNORE INTO Pays (code_p, libelle_p, code_c) VALUES ('TOG', 'Togo', 'AFR');",
+		"INSERT OR IGNORE INTO Pays (code_p, libelle_p, code_c) VALUES ('JPN', 'Japon', 'ASI');",
+
+		// Villages
+		"INSERT OR IGNORE INTO Village (code_v, libelle_v, code_p) VALUES ('CAR', 'Cargèse', 'FRA');",
+		"INSERT OR IGNORE INTO Village (code_v, libelle_v, code_p) VALUES ('KPA', 'Kpalimé', 'TOG');",
+		"INSERT OR IGNORE INTO Village (code_v, libelle_v, code_p) VALUES ('SAH', 'Sahoro', 'JPN');",
+
+		// Activités
+		"INSERT OR IGNORE INTO Activite (id_a, libelle_a) VALUES (1, 'Agriculture');",
+		"INSERT OR IGNORE INTO Activite (id_a, libelle_a) VALUES (2, 'Commerce');",
+		"INSERT OR IGNORE INTO Activite (id_a, libelle_a) VALUES (3, 'Pêche');",
+
+		// Langues
+		"INSERT OR IGNORE INTO Langue (code_l, libelle_l) VALUES ('FR', 'Français');",
+		"INSERT OR IGNORE INTO Langue (code_l, libelle_l) VALUES ('EW', 'Ewé');",
+		"INSERT OR IGNORE INTO Langue (code_l, libelle_l) VALUES ('JP', 'Japonais');"
+	};
+
+	std::cout << "Injection des donnees initiales (Seed Data)..." << std::endl;
+
+	for (const auto& query : seedQueries) {
+		if (sqlite3_exec(m_db.get(), query.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK) {
+			std::cerr << "Erreur lors du Seeding : " << errMsg << std::endl;
+			sqlite3_free(errMsg);
+			return false;
+		}
 	}
 
-	// L'ordre du SELECT doit impérativement correspondre d'aux indices 0, 1, 2 du .cpp
-	std::string sql =
-		"SELECT C.code_c, C.libelle_c "
-		"FROM Continent C "
-		"ORDER BY C.libelle_c ASC;";
-
-	sqlite3_stmt* stmt = nullptr;
-	if (sqlite3_prepare_v2(m_db.get(), sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
-		std::cerr << "Erreur de préparation : " << sqlite3_errmsg(m_db.get()) << std::endl;
-		return list;
-	}
-
-	// On parcourt les lignes retournées par SQLite
-	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		ContinentData data;
-
-		// Extraction des colonnes (attention à bien respecter l'ordre du SELECT)
-		const unsigned char* codePtr = sqlite3_column_text(stmt, 0);
-		const unsigned char* libellePtr = sqlite3_column_text(stmt, 1);
-
-		// Conversion sécurisée en std::string (gestion des valeurs potentiellement NULL)
-		data.code = codePtr ? reinterpret_cast<const char*>(codePtr) : "";
-		data.libelle = libellePtr ? reinterpret_cast<const char*>(libellePtr) : "";
-
-		// Ajout du continent à la liste
-		list.push_back(data);
-	}
-
-	sqlite3_finalize(stmt);
-	return list;
-}
-
-std::vector<PaysData> Database::getAllPays() {
-	std::vector<PaysData> list;
-
-	// On vérifie que la BDD est bien ouverte
-	if (m_db == nullptr) {
-		std::cerr << "Erreur : La connexion à la base de données n'est pas ouverte !" << std::endl;
-		return list;
-	}
-
-	// L'ordre du SELECT doit impérativement correspondre d'aux indices 0, 1, 2 du .cpp
-	std::string sql =
-		"SELECT P.code_p, P.libelle_p, C.code_c, C.libelle_c "
-		"FROM Pays P "
-		"INNER JOIN Continent C ON P.code_c = C.code_c "
-		"ORDER BY C.libelle_c ASC, P.libelle_p ASC;";
-
-	sqlite3_stmt* stmt = nullptr;
-	if (sqlite3_prepare_v2(m_db.get(), sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
-		std::cerr << "Erreur de préparation : " << sqlite3_errmsg(m_db.get()) << std::endl;
-		return list;
-	}
-
-	// On parcourt les lignes retournées par SQLite
-	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		PaysData data;
-
-		// Extraction des colonnes (attention à bien respecter l'ordre du SELECT)
-		const unsigned char* codePtr = sqlite3_column_text(stmt, 0);
-		const unsigned char* libellePtr = sqlite3_column_text(stmt, 1);
-		const unsigned char* codeContinentPtr = sqlite3_column_text(stmt, 2);
-		const unsigned char* libelleContinentPtr = sqlite3_column_text(stmt, 3);
-
-		// Conversion sécurisée en std::string (gestion des valeurs potentiellement NULL)
-		data.code = codePtr ? reinterpret_cast<const char*>(codePtr) : "";
-		data.libelle = libellePtr ? reinterpret_cast<const char*>(libellePtr) : "";
-		data.codeContinent = codeContinentPtr ? reinterpret_cast<const char*>(codeContinentPtr) : "";
-		data.libelleContinent = libelleContinentPtr ? reinterpret_cast<const char*>(libelleContinentPtr) : "";
-
-		// Ajout du pays à la liste
-		list.push_back(data);
-	}
-
-	sqlite3_finalize(stmt);
-	return list;
-}
-
-std::vector<VillageData> Database::getAllVillages() {
-	std::vector<VillageData> list;
-
-	// On vérifie que la BDD est bien ouverte
-	if (m_db == nullptr) {
-		std::cerr << "Erreur : La connexion à la base de données n'est pas ouverte !" << std::endl;
-		return list;
-	}
-
-	// L'ordre du SELECT doit impérativement correspondre d'aux indices 0, 1, 2 du .cpp
-	std::string sql =
-		"SELECT V.code_v, V.libelle_v, P.code_p, P.libelle_p "
-		"FROM Village V "
-		"INNER JOIN Pays P ON V.code_p = P.code_p "
-		"ORDER BY P.libelle_p ASC, V.libelle_v ASC;";
-
-	sqlite3_stmt* stmt = nullptr;
-	if (sqlite3_prepare_v2(m_db.get(), sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
-		std::cerr << "Erreur de préparation : " << sqlite3_errmsg(m_db.get()) << std::endl;
-		return list;
-	}
-
-	// On parcourt les lignes retournées par SQLite
-	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		VillageData data;
-
-		// Extraction des colonnes (attention à bien respecter l'ordre du SELECT)
-		const unsigned char* codePtr = sqlite3_column_text(stmt, 0);
-		const unsigned char* libellePtr = sqlite3_column_text(stmt, 1);
-		const unsigned char* codePaysPtr = sqlite3_column_text(stmt, 2);
-		const unsigned char* libellePaysPtr = sqlite3_column_text(stmt, 3);
-
-		// Conversion sécurisée en std::string (gestion des valeurs potentiellement NULL)
-		data.code = codePtr ? reinterpret_cast<const char*>(codePtr) : "";
-		data.libelle = libellePtr ? reinterpret_cast<const char*>(libellePtr) : "";
-		data.codePays = codePaysPtr ? reinterpret_cast<const char*>(codePaysPtr) : "";
-		data.libellePays = libellePaysPtr ? reinterpret_cast<const char*>(libellePaysPtr) : "";
-
-		// Ajout du village à la liste
-		list.push_back(data);
-	}
-
-	sqlite3_finalize(stmt);
-	return list;
+	return true;
 }

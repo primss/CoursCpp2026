@@ -10,7 +10,7 @@ void Utilities::showAppTitle()
     system("CLS");
     std::cout << "===========================================================" << std::endl;
     std::cout << "|                      CLUB DE VACANCES                   |" << std::endl;
-    std::cout << "|                        GCV v0.0.1                       |" << std::endl;
+    std::cout << "|                        GCV v0.0.3                       |" << std::endl;
     std::cout << "===========================================================" << std::endl;
 }
 
