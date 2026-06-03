@@ -5,6 +5,7 @@
   </Configurations>
   <Project Path="ConsoleAppCppFraction/ConsoleAppCppFraction.vcxproj" Id="85795670-3acc-410b-b85c-c73cd965c0a0" />
   <Project Path="ConsoleAppCppOO/ConsoleAppCppOO.vcxproj" Id="35f3c991-d2b2-41a5-a5b7-c7549ba8cfbd" />
+  <Project Path="ConsoleAppGestionBureauPoste/ConsoleAppGestionBureauPoste.vcxproj" Id="21cd6c09-e62b-4cc4-a4d6-31ebbd19a465" />
   <Project Path="ConsoleAppGestionClubDeVacances/ConsoleAppGestionClubDeVacances.vcxproj" Id="c5d92764-5667-4bf8-a20f-e4763ec128e3" />
   <Project Path="ConsoleAppLaboratory/ConsoleAppLaboratory.vcxproj" Id="f6845e0d-2432-4c2c-b3da-e6173cc7f187" />
   <Project Path="ConsoleAppTestPolymorphisme/ConsoleAppTestPolymorphisme.vcxproj" Id="78b73450-e266-4592-bebf-1e4a64cc21e5" />
